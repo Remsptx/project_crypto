@@ -22,8 +22,8 @@ def load_json_file(jsonfile):
         database.append(user)
     return database
 def update_json_file(bodyJson):
-    id = json.body_json.get('id')
-    pwd = json.body_json.get('pwd')
+    id = bodyJson.get('id')
+    pwd = bodyJson.get('pwd')
 
     with open(dbFile, mode='a', newline='') as file:
         writer = csv.writer(file)
@@ -42,11 +42,19 @@ def register():
     if id in [x[0] for x in database]:
         return jsonify({'message': 'User already exists'}), 200
     # Hash password
-    hash_pwd = hasher.hash(pwd)
+    hash = hasher.hash(pwd)
     # Encrypt password
-    return jsonify({'message': 'User registered successfully'}), 201
-
-    # Store in json file
+    body = {
+        'hash': hash
+        }
+    response = requests.post(ENCRYPT_URL, json=body)
+    encrypted_hash = response.json().get('encrypted_hash')
+    #Store encrypted password in the csv using a json file
+    bodyJson = {
+        'id': id,
+        'pwd': encrypted_hash
+        }
+    update_json_file(bodyJson)
 
     return jsonify({'message': 'User registered successfully'}), 201
 @app.route('/login', methods=['POST'])
