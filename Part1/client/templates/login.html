@@ -17,46 +17,32 @@
     </form>
 
     <script>
-                async function login() {
-                    const id = document.getElementById('id').value;
-                    const pwd = document.getElementById('pwd').value;
+        document.getElementById("form").addEventListener("submit", function(event) {
+            const id = document.getElementById('id').value;
+            const pwd = document.getElementById('pwd').value;
                     
-                    if (!id || !pwd) {
-                        document.getElementById('errorMessage').innerText = 'Please enter both username and password.';
-                        return;
-                    }
-                    // Your login logic here
+            if (!id || !pwd) {
+                document.getElementById('errorMessage').innerText = 'Please enter both username and password.';
+                return;
+            }
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'id': user,
+                        'pwd': password
+                    })
+                });
 
-                    // Example of sending a request to a server
-                    fetch('/login', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            'id': user,
-                            'pwd': password
-                        })
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Failed to login');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data.message === 'Logged in successfully') {
-                            alert(data.message);
-                            window.location.href = '/'; 
-                        } else {
-                            alert("Échec de la connexion : " + data.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Erreur lors de la demande:', error);
-                    });
-                    }
-
+            if (response.ok) {
+                alert(response);
+            } else {
+                alert("Failed to login")
+                document.getElementById('errorMessage').textContent = errorMessage;
+            }
+        });
     </script>
 
 </body>

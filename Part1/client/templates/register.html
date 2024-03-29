@@ -17,37 +17,34 @@
     </form>
 
     <script>
-                async function register() {
-                    const id = document.getElementById('id').value;
-                    const pwd = document.getElementById('pwd').value;
+        document.getElementById("form").addEventListener("submit", function(event) {
+            const id = document.getElementById('id').value;
+            const pwd = document.getElementById('pwd').value;
                     
-                    if (!id || !pwd) {
-                        document.getElementById('errorMessage').innerText = 'Please enter both username and password.';
-                        return;
-                    }
-                    // Your login logic here
-
-                    // Example of sending a request to a server
-                    const response = await fetch('/register', {
-                        method: 'POST',
-                        headers: {
+            if (!id || !pwd) {
+                document.getElementById('errorMessage').innerText = 'Please enter both username and password.';
+                return;
+            }
+            fetch('/register', {
+                method: 'POST',
+                headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({
-                            'id': user,
-                            'pwd': password
-                        })
-                    });
+                body: JSON.stringify({
+                    'id': user,
+                    'pwd': password
+                })
+            });
 
-                    if (response.ok) {
-                        alert('Registered successfully');
-                        window.location.href = 'login.html';
-                    } else {
-                        // Failed login
-                        const errorMessage = await response.text();
-                        document.getElementById('errorMessage').textContent = errorMessage;
-                    }
-                }
+            if (response.ok) {
+                alert('Registered successfully');
+                window.location.href = 'login';
+            } else {
+                // Failed login
+                alert("Failed to register")
+                document.getElementById('errorMessage').textContent = errorMessage;
+            }
+        });
 
     </script>
 

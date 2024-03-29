@@ -31,11 +31,11 @@ def update_json_file(bodyJson):
         writer.writerow([id, pwd])
 
 @app.route('/registerPage')
-def home():
+def registerPage():
     return render_template('register.html')
 
 @app.route('/loginPage')
-def home():
+def loginPage():
     return render_template('login.html')
 
 @app.route('/')

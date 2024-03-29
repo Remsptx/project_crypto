@@ -64,12 +64,3 @@ def decrypt():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
-
-
-
-
-<<<<<<< HEAD
-  
-=======
-  
->>>>>>> 73388a8f813ebb130aa8a2d0c40ea3a6471a861d
