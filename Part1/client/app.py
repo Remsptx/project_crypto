@@ -16,19 +16,22 @@ database = []
 hasher = PasswordHasher(hash_len=256)
 
 def load_json_file(jsonfile):
-    with open(jsonfile, 'r') as file:
-        data = json.load(file)
-    for entry in data:
-        user = {'id': entry['id'], 'pwd': entry['pwd']}
-        database.append(user)
+    try:
+        with open(jsonfile, 'r') as file:
+            data = json.load(file)
+        for entry in data:
+            user = {'id': entry['id'], 'pwd': entry['pwd']}
+            database.append(user)
+    except JSONDecodeError:
+        pass
     return database
-def update_json_file(bodyJson):
-    id = bodyJson.get('id')
-    pwd = bodyJson.get('pwd')
 
-    with open(dbFile, mode='a', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow([id, pwd])
+def update_json_file(bodyJson):
+    with open(dbFile, mode='r') as file:
+        data = json.load(file)
+    data.append(bodyJson)
+    with open(dbFile, mode='w') as file:
+        json.dump(data, file, indent=4)
 
 @app.route('/registerPage')
 def registerPage():
@@ -46,7 +49,7 @@ def home():
 def register():
     data = request.json
     id = request.json['id']
-    pwd= request.json['pwd']
+    pwd = request.json['pwd']
     load_json_file(dbFile)
 
     if id in [x[0] for x in database]:
