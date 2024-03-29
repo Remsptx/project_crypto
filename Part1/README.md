@@ -41,4 +41,4 @@ To verify the password, we send a request to the server to decrypt the hash stor
 - **register** we load the DbFile and verify if the username is already used. If not, we send a JSON with the ID and password to the server requesting for the /encrypt method, and then retreive the encrypted password from it.
   After this, we add the id to the JSON body and append the whole to the DbFile. The user is registered.
 
-  PS : We had some serious complication about the communication between Client and server and using the JSON file, but our methods should work so please take a look at them !
+  PS : The redirection does not work but the register and login do.
