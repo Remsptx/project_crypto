@@ -9,40 +9,40 @@
 <body>
     <form id="form">
         <label for="id">Username:</label><br>
-        <input type="text" id="id" name="username" required><br>
+        <input type="text" id="id" required><br>
         <label for="pwd">Password:</label><br>
-        <input type="password" id="pwd" name="password" required><br><br>
-        <button type="submit">Login</button>
+        <input type="password" id="pwd" required><br><br>
+        <button onclick="login()">Login</button>
         <div id="errorMessage" style="color: red;"></div>
     </form>
 
     <script>
-        document.getElementById("form").addEventListener("submit", function(event) {
+        async function login() {
             const id = document.getElementById('id').value;
             const pwd = document.getElementById('pwd').value;
-                    
+            console.log("TEST")        
             if (!id || !pwd) {
                 document.getElementById('errorMessage').innerText = 'Please enter both username and password.';
                 return;
             }
-            fetch('/login', {
+            const response =await fetch('/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
-                        'id': user,
-                        'pwd': password
-                    })
+                body: {
+                    'id': id,
+                    'pwd': pwd
+                }
                 });
 
             if (response.ok) {
-                alert(response);
+                alert("Logged In");
             } else {
                 alert("Failed to login")
                 document.getElementById('errorMessage').textContent = errorMessage;
             }
-        });
+        };
     </script>
 
 </body>

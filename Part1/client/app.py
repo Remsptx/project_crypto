@@ -44,7 +44,6 @@ def home():
 
 @app.route('/register', methods=['POST'])
 def register():
-    # Get informations and load the dbfile in database
     data = request.json
     id = request.json['id']
     pwd= request.json['pwd']
