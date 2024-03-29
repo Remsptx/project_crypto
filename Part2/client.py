@@ -19,3 +19,5 @@ def string_to_int(pwd):
 
     s = 2+(hashed_int % (q-2))
     return s
+
+def H()

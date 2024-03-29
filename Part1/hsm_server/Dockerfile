@@ -1,0 +1,43 @@
+# Utilisez l'image de Python officielle en tant qu'image de base
+FROM python:3.9
+
+FROM python:3.9
+
+# Install necessary dependencies
+RUN apt-get update && \
+    apt-get install -y curl gnupg && \
+    curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor > /etc/apt/trusted.gpg.d/bazel.gpg && \
+    echo "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list && \
+    apt-get update && \
+    apt-get install -y bazel-6.0.0 && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install system packages
+RUN apt-get update && \
+    apt-get install -y protobuf-compiler build-essential && \
+    rm -rf /var/lib/apt/lists/*
+
+# Set environment variables
+ENV BAZEL_VERSION=4.2.0
+ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/jvm/java-11-openjdk-amd64/bin
+
+
+# Set the working directory
+WORKDIR /usr/src/app
+
+# Install app dependencies
+RUN pip install --upgrade pip
+RUN pip install tink
+RUN pip install flask
+RUN pip install flask_cors
+
+# Copy the current directory contents into the container
+COPY Server2.py .
+COPY tink.json .
+
+# Expose the port the app runs on
+EXPOSE 5000
+
+# Run the application
+CMD ["python", "Server2.py"]
