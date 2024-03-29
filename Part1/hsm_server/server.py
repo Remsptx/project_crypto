@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 import tink
 from flask_cors import CORS
 from tink import aead
@@ -67,14 +67,17 @@ def decrypt():
 
     encrypted_hash = request.json.get('encrypted_hash')
     if encrypted_hash:
+        if key_id in key_dict_json: 
         # on récupère la  clé correspondant à l'identifiant
-        serialized_keyset_handle = key_dict_json[key_id]
-        keyset_handle = tink.CleartextKeysetHandle.deserialize(serialized_keyset_handle)
+            serialized_keyset_handle = key_dict_json[key_id]
+            keyset_handle = tink.CleartextKeysetHandle.deserialize(serialized_keyset_handle)
         # Obtenir l'primitive Aead à partir de la clé
-        aead_primitive = aead.KeysetHandle.get_primitive(keyset_handle)
+            aead_primitive = aead.KeysetHandle.get_primitive(keyset_handle)
          # Déchiffrer le texte chiffré
-        decrypted_hash = aead_primitive.decrypt(encrypted_hash, id.encode()).decode()
-        return jsonify({'hash': decrypted_hash.decode()})
+            decrypted_hash = aead_primitive.decrypt(encrypted_hash, key_id.encode()).decode()
+            return jsonify({'hash': decrypted_hash})
+        else:
+            return jsonify({'error': 'Key not found'}), 404
     else:
         return jsonify({'error': 'No encrypted data provided'}), 400
 
