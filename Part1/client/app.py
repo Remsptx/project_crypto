@@ -30,6 +30,14 @@ def update_json_file(bodyJson):
         writer = csv.writer(file)
         writer.writerow([id, pwd])
 
+@app.route('/registerPage')
+def home():
+    return render_template('register.html')
+
+@app.route('/loginPage')
+def home():
+    return render_template('login.html')
+
 @app.route('/')
 def home():
     return render_template('home.html')
@@ -48,6 +56,7 @@ def register():
     hash = hasher.hash(pwd)
     # Encrypt password
     body = {
+        'id': id,
         'hash': hash
         }
     response = requests.post(ENCRYPT_URL, json=body)
