@@ -1,13 +1,29 @@
 from flask import Flask, request, jsonify
 import tink
+from flask_cors import CORS
 from tink import aead
 from tink import tink_config
 from tink.proto import tink_pb2
 import json
-
 app = Flask(__name__)
+CORS(app)
 
+@app.route('/')
+def home():
+    html_content = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Home</title>
+    </head>
+    <body>
+        <h1>It works</h1>
+    </body>
+    </html>
+    """
+    return make_response(html_content)
 
+    
 @app.route('/encrypt', methods=['POST'])
 def encrypt():
 
