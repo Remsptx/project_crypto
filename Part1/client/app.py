@@ -9,8 +9,8 @@ import requests
 app = Flask(__name__)
 CORS(app)
 
-ENCRYPT_URL = 'http://localhost:3001/encrypt'
-DECRYPT_URL = 'http://localhost:3001/decrypt'
+ENCRYPT_URL = 'http://Server:5000/encrypt'
+DECRYPT_URL = 'http://Server:5000/decrypt'
 dbFile = 'credentials.json'
 database = []
 
