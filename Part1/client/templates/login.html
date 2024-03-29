@@ -30,12 +30,13 @@
                 headers: {
                     'Content-Type': 'application/json'
                     },
-                body: {
-                    'id': id,
-                    'pwd': pwd
-                }
+                body: JSON.stringify({
+                id: id,
+                pwd: pwd
+                })
                 });
-
+            const data = await response.json();
+            console.log(data);
             if (response.ok) {
                 alert("Logged In");
             } else {

@@ -25,17 +25,18 @@
                 document.getElementById('errorMessage').innerText = 'Please enter both username and password.';
                 return;
             }
-            const response =await fetch('/register', {
+            const response = await fetch('/register', {
                 method: 'POST',
                 headers: {
                             'Content-Type': 'application/json'
                         },
-                body: {
-                    'id': id,
-                    'pwd': pwd
-                }
+                body: JSON.stringify({
+                    id: id,
+                    pwd: pwd
+                })
             });
-
+            const data = await response.json();
+            console.log(data);
             if (response.ok) {
                 alert('Registered successfully');
                 window.location.href = 'loginPage';
@@ -43,6 +44,7 @@
                 // Failed login
                 alert("Failed to register")
                 document.getElementById('errorMessage').textContent = errorMessage;
+                window.location.href = 'registerPage'
             }
         };
 

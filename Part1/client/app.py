@@ -3,6 +3,7 @@ from flask import Flask, request, render_template,jsonify
 from flask_cors import CORS
 from argon2 import PasswordHasher
 import json
+from json.decoder import JSONDecodeError
 import csv
 import requests
 app = Flask(__name__)
@@ -47,11 +48,9 @@ def home():
 
 @app.route('/register', methods=['POST'])
 def register():
-    data = request.json
     id = request.json['id']
     pwd = request.json['pwd']
     load_json_file(dbFile)
-
     if id in [x[0] for x in database]:
         return jsonify({'message': 'User already exists'}), 401
     # Hash password
@@ -62,6 +61,7 @@ def register():
         'hash': hash
         }
     response = requests.post(ENCRYPT_URL, json=body)
+
     encrypted_hash = response.json().get('encrypted_hash')
     #Store encrypted password in the csv using a json file
     bodyJson = {
@@ -74,7 +74,6 @@ def register():
 @app.route('/login', methods=['POST'])
 def login():
     # Get informations and load the dbfile in database
-    data = request.json
     id= request.json['id']
     pwd= request.json['pwd']
     load_json_file(dbFile)
