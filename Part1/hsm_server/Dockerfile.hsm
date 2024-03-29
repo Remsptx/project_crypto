@@ -1,4 +1,4 @@
-FROM python:3.8
+FROM python:3.9
 RUN apt-get update && \
     apt-get install -y curl gnupg && \
     curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor > /etc/apt/trusted.gpg.d/bazel.gpg && \
@@ -17,6 +17,7 @@ RUN pip install --upgrade pip
 RUN pip install tink
 RUN pip install flask
 RUN pip install flask_cors
+COPY key.json .
 COPY server.py .
 EXPOSE 3001
 CMD ["python", "server.py"]

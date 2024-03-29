@@ -17,22 +17,12 @@ database = []
 hasher = PasswordHasher(hash_len=256)
 
 def load_json_file(jsonfile):
-    try:
-        with open(jsonfile, 'r') as file:
-            data = json.load(file)
-        for entry in data:
-            user = {'id': entry['id'], 'pwd': entry['pwd']}
-            database.append(user)
-    except JSONDecodeError:
-        pass
-    return database
+    with open(dbFile, 'r+') as file:
+        for line in file:
+            parts = line.split(':')
+            database.append(parts)
 
-def update_json_file(bodyJson):
-    with open(dbFile, mode='r') as file:
-        data = json.load(file)
-    data.append(bodyJson)
-    with open(dbFile, mode='w') as file:
-        json.dump(data, file, indent=4)
+
 
 @app.route('/registerPage')
 def registerPage():
@@ -68,7 +58,9 @@ def register():
         'id': id,
         'pwd': encrypted_hash
         }
-    update_json_file(bodyJson)
+    string = f'{id}:{encrypted_hash}\n'
+    with open(dbFile, 'a') as file:
+      file.write(string)
 
     return jsonify({'message': 'User registered successfully'}), 201
 @app.route('/login', methods=['POST'])
@@ -80,11 +72,11 @@ def login():
 
     # Check if the user is registered
     if id not in [x[0] for x in database]:
-        return jsonify({'message': 'User not found'}), 401
+        return jsonify({'message': 'User not found'}), 404
 
-    encrypted_hash = (x[1] for x in database if x[0] == id)
+    encrypted_hash = next((x[1] for x in database if x[0] == id), None)
     if encrypted_hash is None:
-        return jsonify({'message' : 'Error during password recovery' }), 401
+        return jsonify({'message' : 'Error during password recovery' }), 500
     
     body = {
         'id': id,
@@ -93,7 +85,7 @@ def login():
     response = requests.post(DECRYPT_URL, json=body)
     decrypted_hash = response.json().get('hash')
     # Verify password (pwd is the password in plain that the user entered, decrypted_hash is the hash of the real password stored in the database)
-    if hasher.verify(pwd, decrypted_hash):
+    if hasher.verify(decrypted_hash, pwd):
         return jsonify({'message': 'Login successful !'}), 200
     else:
         return jsonify({'message': 'Invalid credentials'}), 401
