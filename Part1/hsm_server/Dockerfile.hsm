@@ -1,7 +1,5 @@
 # Utilisez l'image de Python officielle en tant qu'image de base
-FROM python:3.9
-
-FROM python:3.9
+FROM python:3.8
 
 # Install necessary dependencies
 RUN apt-get update && \
@@ -33,11 +31,10 @@ RUN pip install flask
 RUN pip install flask_cors
 
 # Copy the current directory contents into the container
-COPY Server2.py .
-COPY tink.json .
+COPY server.py .
 
 # Expose the port the app runs on
 EXPOSE 5000
 
 # Run the application
-CMD ["python", "Server2.py"]
+CMD ["python", "server.py"]

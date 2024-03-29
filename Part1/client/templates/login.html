@@ -28,7 +28,7 @@
                     // Your login logic here
 
                     // Example of sending a request to a server
-                    const response = await fetch('/login', {
+                    fetch('/login', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -37,16 +37,25 @@
                             'id': user,
                             'pwd': password
                         })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to login');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.message === 'Logged in successfully') {
+                            alert(data.message);
+                            window.location.href = '/'; 
+                        } else {
+                            alert("Échec de la connexion : " + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors de la demande:', error);
                     });
-
-                    if (response.ok) {
-                        alert('Logged in successfully');
-                    } else {
-                        // Failed login
-                        const errorMessage = await response.text();
-                        document.getElementById('errorMessage').textContent = errorMessage;
                     }
-                }
 
     </script>
 

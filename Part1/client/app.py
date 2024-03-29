@@ -30,7 +30,9 @@ def update_json_file(bodyJson):
         writer = csv.writer(file)
         writer.writerow([id, pwd])
 
-
+@app.route('/')
+def home():
+    return render_template('home.html')
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -41,7 +43,7 @@ def register():
     load_json_file(dbFile)
 
     if id in [x[0] for x in database]:
-        return jsonify({'message': 'User already exists'}), 200
+        return jsonify({'message': 'User already exists'}), 401
     # Hash password
     hash = hasher.hash(pwd)
     # Encrypt password
@@ -68,11 +70,11 @@ def login():
 
     # Check if the user is registered
     if id not in [x[0] for x in database]:
-        return jsonify({'message': 'User not found'}), 200
+        return jsonify({'message': 'User not found'}), 401
 
     encrypted_hash = (x[1] for x in database if x[0] == id)
     if encrypted_hash is None:
-        return jsonify({'message' : 'Error during password recovery' }), 200
+        return jsonify({'message' : 'Error during password recovery' }), 401
     
     body = {
         'id': id,
@@ -84,7 +86,7 @@ def login():
     if hasher.verify(pwd, decrypted_hash):
         return jsonify({'message': 'Login successful !'}), 200
     else:
-        return jsonify({'message': 'Invalid credentials'}), 200
+        return jsonify({'message': 'Invalid credentials'}), 401
 
 if __name__ == '__main__':
     app.run(debug=True,host='0.0.0.0', port = 3000)

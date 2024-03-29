@@ -1,7 +1,0 @@
-FROM alpine:latest
-
-RUN apk --no-cache add openssl
-WORKDIR /app
-
-COPY your_script.py /app/your_script.py
-ENTRYPOINT ["python", "your_script.py"]

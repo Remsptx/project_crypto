@@ -1,0 +1,26 @@
+version: '3'
+services:
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    expose:
+      - 3000
+    networks:
+      - privateNetwork
+
+  hsm:
+    build:
+      context: ./hsm_server
+      dockerfile: Dockerfile.hsm
+    ports:
+      - "5000:5000"
+    expose:
+      - 5000
+    networks:
+      - privateNetwork
+
+networks:
+  privateNetwork:
