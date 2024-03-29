@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Login</title>
+</head>
+<body>
+    <form id="form">
+        <label for="id">Username:</label><br>
+        <input type="text" id="id" name="username" required><br>
+        <label for="pwd">Password:</label><br>
+        <input type="password" id="pwd" name="password" required><br><br>
+        <button type="submit">Login</button>
+        <div id="errorMessage" style="color: red;"></div>
+    </form>
+
+    <script>
+                async function login() {
+                    const id = document.getElementById('id').value;
+                    const pwd = document.getElementById('pwd').value;
+                    
+                    if (!id || !pwd) {
+                        document.getElementById('errorMessage').innerText = 'Please enter both username and password.';
+                        return;
+                    }
+                    // Your login logic here
+
+                    // Example of sending a request to a server
+                    const response = await fetch('/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            'id': user,
+                            'pwd': password
+                        })
+                    });
+
+                    if (response.ok) {
+                        alert('Logged in successfully');
+                    } else {
+                        // Failed login
+                        const errorMessage = await response.text();
+                        document.getElementById('errorMessage').textContent = errorMessage;
+                    }
+                }
+
+    </script>
+
+</body>
+</html>
